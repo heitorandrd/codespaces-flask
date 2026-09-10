@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Calculadora{% endblock %}
+{% block conteudo %}
+<h1>Calculadora</h1>
+<form action="{{ url_for('resultado') }}" method="POST">
+    <input type="number" step="any" name="num1" placeholder="Primeiro número" required>
+    <br><br>
+    <select name="operacao">
+        <option value="soma">+</option>
+        <option value="subtracao">-</option>
+        <option value="multiplicacao">×</option>
+        <option value="divisao">÷</option>
+    </select>
+    <br><br>
+    <input type="number" step="any" name="num2" placeholder="Segundo número" required>
+    <br><br>
+    <button type="submit">Calcular</button>
+</form>
+{% endblock %}
