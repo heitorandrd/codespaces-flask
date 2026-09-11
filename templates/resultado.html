@@ -1,8 +1,19 @@
-{% extends 'base.html' %}
-{% block title %}Resultado{% endblock %}
-{% block conteudo %}
-<h1>Resultado</h1>
-<p>O resultado é: <strong>{{ resultado }}</strong></p>
-<a href="{{ url_for('index') }}">Voltar ao início</a> |
-<a href="{{ url_for('calculadora') }}">Fazer outra conta</a>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultado</title>
+    <link rel="icon" href="{{ url_for('static', filename='rastreamento.ico') }}">
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">Início</a> |
+        <a href="{{ url_for('calculadora') }}">Calculadora</a>
+    </nav>
+    <hr>
+    <h1>Resultado</h1>
+    <p>O resultado é: <strong>{{ resultado }}</strong></p>
+    <a href="{{ url_for('index') }}">Voltar ao início</a> |
+    <a href="{{ url_for('calculadora') }}">Fazer outra conta</a>
+</body>
+</html>
