@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}NutriVida - Meu Perfil{% endblock %}
+{% block conteudo %}
+<section class="form-card perfil">
+    <h1>Meu Perfil</h1>
+    <p><strong>Nome:</strong> Dra. Ana Beatriz Ramos</p>
+    <p><strong>Formação:</strong> Nutrição — Universidade Federal do Piauí (UFPI)</p>
+    <p><strong>Especialidade:</strong> Nutrição Esportiva e Emagrecimento Saudável</p>
+    <p><strong>Sobre:</strong> Atendo há 8 anos ajudando pessoas a construírem uma relação mais saudável com a alimentação, unindo ciência e praticidade no dia a dia.</p>
+
+    <a class="botao" href="{{ url_for('index') }}">Voltar ao início</a>
+</section>
+{% endblock %}

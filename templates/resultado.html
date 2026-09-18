@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Resultado</title>
-    <link rel="icon" href="{{ url_for('static', filename='rastreamento.ico') }}">
-</head>
-<body>
-    <nav>
-        <a href="{{ url_for('index') }}">Início</a> |
-        <a href="{{ url_for('calculadora') }}">Calculadora</a>
-    </nav>
-    <hr>
-    <h1>Resultado</h1>
-    <p>O resultado é: <strong>{{ resultado }}</strong></p>
-    <a href="{{ url_for('index') }}">Voltar ao início</a> |
-    <a href="{{ url_for('calculadora') }}">Fazer outra conta</a>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}NutriVida - Resultado{% endblock %}
+{% block conteudo %}
+<section class="form-card">
+    <h1>Resultado do Cálculo</h1>
+    <p>Para <strong>{{ peso }}g</strong> de alimento com <strong>{{ calorias_100g }}</strong> kcal por 100g:</p>
+    <p class="resultado-destaque">{{ calorias_totais }} kcal</p>
+
+    <a class="botao" href="{{ url_for('calculadora') }}">Fazer novo cálculo</a>
+    <a class="botao botao-secundario" href="{{ url_for('index') }}">Voltar ao início</a>
+</section>
+{% endblock %}

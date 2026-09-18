@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}NutriVida - Erro{% endblock %}
+{% block conteudo %}
+<section class="form-card erro">
+    <h1>Ops! Valores inválidos</h1>
+    <p>Verifique se você digitou números válidos e maiores que zero para o peso e para as calorias por 100g.</p>
+
+    <a class="botao" href="{{ url_for('calculadora') }}">Tentar novamente</a>
+    <a class="botao botao-secundario" href="{{ url_for('index') }}">Voltar ao início</a>
+</section>
+{% endblock %}

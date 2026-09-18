@@ -1,30 +1,17 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Calculadora</title>
-    <link rel="icon" href="{{ url_for('static', filename='rastreamento.ico') }}">
-</head>
-<body>
-    <nav>
-        <a href="{{ url_for('index') }}">Início</a> |
-        <a href="{{ url_for('calculadora') }}">Calculadora</a>
-    </nav>
-    <hr>
-    <h1>Calculadora</h1>
+{% extends 'base.html' %}
+{% block title %}NutriVida - Calculadora{% endblock %}
+{% block conteudo %}
+<section class="form-card">
+    <h1>Calculadora de Calorias</h1>
+    <p>Informe o peso do alimento e as calorias por 100g para estimar o total de calorias.</p>
     <form action="{{ url_for('resultado') }}" method="POST">
-        <input type="number" step="any" name="num1" placeholder="Primeiro número" required>
-        <br><br>
-        <select name="operacao">
-            <option value="soma">+</option>
-            <option value="subtracao">-</option>
-            <option value="multiplicacao">×</option>
-            <option value="divisao">÷</option>
-        </select>
-        <br><br>
-        <input type="number" step="any" name="num2" placeholder="Segundo número" required>
-        <br><br>
+        <label for="peso">Peso do alimento (em gramas)</label>
+        <input type="number" step="any" id="peso" name="peso" placeholder="Ex: 150" required>
+
+        <label for="calorias_100g">Calorias por 100g</label>
+        <input type="number" step="any" id="calorias_100g" name="calorias_100g" placeholder="Ex: 52" required>
+
         <button type="submit">Calcular</button>
     </form>
-</body>
-</html>
+</section>
+{% endblock %}

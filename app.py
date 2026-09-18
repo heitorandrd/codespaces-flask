@@ -1,42 +1,56 @@
-from flask import Flask, render_template, request, send_from_directory
-import os
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 @app.route('/calculadora')
 def calculadora():
     return render_template('calculadora.html')
 
+
 @app.route('/resultado', methods=['POST'])
 def resultado():
-    num1 = float(request.form['num1'])
-    num2 = float(request.form['num2'])
-    operacao = request.form['operacao']
+    peso_texto = request.form.get('peso', '')
+    calorias_texto = request.form.get('calorias_100g', '')
 
-    if operacao == 'soma':
-        resultado = num1 + num2
-    elif operacao == 'subtracao':
-        resultado = num1 - num2
-    elif operacao == 'multiplicacao':
-        resultado = num1 * num2
-    elif operacao == 'divisao':
-        resultado = num1 / num2 if num2 != 0 else 'Erro: divisão por zero'
-    else:
-        resultado = 'Operação inválida'
+    try:
+        peso = float(peso_texto)
+        calorias_100g = float(calorias_texto)
+    except ValueError:
+        return redirect(url_for('erro_calculo'))
 
-    return render_template('resultado.html', resultado=resultado)
+    if peso <= 0 or calorias_100g <= 0:
+        return redirect(url_for('erro_calculo'))
+
+    calorias_totais = round((peso * calorias_100g) / 100, 2)
+
+    return render_template(
+        'resultado.html',
+        peso=peso,
+        calorias_100g=calorias_100g,
+        calorias_totais=calorias_totais
+    )
+
+
+@app.route('/erro')
+def erro_calculo():
+    return render_template('erro.html')
+
+
+@app.route('/perfil')
+def perfil():
+    return render_template('perfil.html')
+
 
 @app.route('/favicon.ico')
 def favicon():
-    return send_from_directory(
-        os.path.join(app.root_path, 'static'),
-        'favicon.ico',
-        mimetype='image/vnd.microsoft.icon'
-    )
+    return app.send_static_file('rastreamento.ico')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
