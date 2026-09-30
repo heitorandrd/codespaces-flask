@@ -2,14 +2,14 @@
 {% block title %}NutriVida - Início{% endblock %}
 {% block conteudo %}
 <section class="hero">
-    <h1>Bem-vindo ao NutriVida</h1>
+    <h1>Bem-vindo(a) ao NutriVida</h1>
     <p>Seu espaço para acompanhar a alimentação de forma simples e saudável. Calcule calorias, conheça sua nutricionista e cuide melhor da sua saúde.</p>
     <a class="botao" href="{{ url_for('calculadora') }}">Ir para a Calculadora</a>
     <a class="botao botao-secundario" href="{{ url_for('perfil') }}">Conhecer a Nutricionista</a>
 </section>
 
 <section class="imagens">
-    <img src="{{ url_for('static', filename='maça.jpg') }}" alt="Ilustração de alimentação saudável">
-    <img src="{{ url_for('static', filename='617.jpg') }}" alt="Ilustração de balança nutricional">
+    <img src="{{ url_for('static', filename='nutricao-1.svg') }}" alt="Ilustração de alimentação saudável">
+    <img src="{{ url_for('static', filename='nutricao-2.svg') }}" alt="Ilustração de balança nutricional">
 </section>
 {% endblock %}
