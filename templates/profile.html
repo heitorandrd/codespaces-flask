@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfil - Portal Saúde &amp; Bem-Estar{% endblock %}
+
+{% block content %}
+<section class="card perfil">
+  <div class="avatar">{{ inicial }}</div>
+  <div class="perfil-info">
+    <h2>{{ nome }}</h2>
+    <p class="linha"><span class="rot">E-mail</span> {{ email }}</p>
+    <p class="linha"><span class="rot">Idade</span> {{ idade }} anos</p>
+    <p class="linha"><span class="rot">Peso</span> {{ peso }} kg</p>
+    <p class="linha"><span class="rot">Altura</span> {{ altura }} m</p>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Minhas Metas</h2>
+  <ul class="lista-simples">
+    {% for meta in metas %}
+    <li>{{ meta }}</li>
+    {% endfor %}
+  </ul>
+  <a class="btn" href="{{ url_for('imc', peso=peso, altura=altura, idade=idade) }}">Calcular meu IMC</a>
+</section>
+{% endblock %}

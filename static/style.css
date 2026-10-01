@@ -1,0 +1,432 @@
+.hero {
+  background: linear-gradient(135deg, #1f6b56 0%, #2fa083 100%);
+  color: #ffffff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 38px 24px;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  font-size: 12px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+.grid-2 .card {
+  margin-bottom: 0;
+}
+
+.card h2 {
+  color: var(--verde);
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.descricao {
+  font-size: 13px;
+  color: #444444;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 12px 0 4px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d5dcd9;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #ffffff;
+  font-family: inherit;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #1a73e8;
+}
+
+.btn {
+  display: inline-block;
+  background: var(--verde);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: 16px;
+}
+
+.btn:hover {
+  background: var(--verde-escuro);
+}
+
+.login-card {
+  max-width: 420px;
+  margin: 24px auto 0;
+}
+
+.senha-wrap {
+  position: relative;
+}
+
+.senha-wrap input {
+  padding-right: 40px;
+}
+
+.toggle-senha {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.caps-aviso {
+  margin-top: 10px;
+  background: #fff4d6;
+  border: 1px solid #f0c75e;
+  color: #7a5600;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.caps-aviso[hidden] {
+  display: none;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--verde);
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.perfil {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.perfil-info h2 {
+  font-size: 18px;
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+
+.linha {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.linha .rot {
+  display: inline-block;
+  min-width: 52px;
+  color: var(--verde);
+  font-weight: bold;
+}
+
+.lista-simples {
+  list-style: none;
+}
+
+.lista-simples li {
+  font-size: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #edf1ef;
+}
+
+.equipe {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.membro {
+  background: #f1f5f4;
+  border-radius: 6px;
+  text-align: center;
+  padding: 14px 8px;
+}
+
+.membro .avatar {
+  width: 38px;
+  height: 38px;
+  font-size: 15px;
+  margin: 0 auto 8px;
+}
+
+.membro strong {
+  display: block;
+  font-size: 12px;
+}
+
+.membro span {
+  font-size: 11px;
+}
+
+.recurso {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.recurso-icone {
+  font-size: 16px;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.recurso h3 {
+  font-size: 12px;
+  color: var(--verde);
+  margin-bottom: 2px;
+}
+
+.recurso p {
+  font-size: 11px;
+  color: #444444;
+}
+
+.resultado {
+  text-align: center;
+}
+
+.expressao {
+  font-size: 22px;
+  margin: 10px 0 14px;
+}
+
+.expressao .op {
+  color: var(--verde);
+  font-weight: bold;
+}
+
+.msg-erro {
+  color: #b3261e;
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.titulo-imc {
+  text-transform: uppercase;
+  font-size: 15px !important;
+  letter-spacing: 0.3px;
+}
+
+.help {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--verde);
+  color: #ffffff;
+  border: none;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 6px;
+  vertical-align: middle;
+  font-family: inherit;
+}
+
+.explicacao {
+  background: #f4f7f6;
+  border: 1px solid #e3e9e6;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 11px;
+  max-width: 440px;
+  margin: 12px auto;
+  text-align: left;
+  color: #333333;
+}
+
+.explicacao[hidden] {
+  display: none;
+}
+
+.dados {
+  font-size: 12px;
+  color: #555555;
+  margin: 10px 0;
+}
+
+.valor-grande {
+  font-size: 34px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 5px 18px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.badge-magreza,
+.badge-essencial {
+  background: #bbdefb;
+  color: #0d47a1;
+}
+
+.badge-normal,
+.badge-atletico,
+.badge-fitness {
+  background: #c8e6c9;
+  color: #1b5e20;
+}
+
+.badge-sobrepeso,
+.badge-aceitavel {
+  background: #ffd54f;
+  color: #6b4e00;
+}
+
+.badge-obesidade {
+  background: #ffcdd2;
+  color: #b71c1c;
+}
+
+.rotulo-pequeno {
+  font-size: 11px;
+  color: #666666;
+  text-transform: uppercase;
+  margin-top: 16px;
+}
+
+.peso-ideal {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--verde);
+  margin-bottom: 18px;
+}
+
+.regua-wrap {
+  margin-top: 8px;
+}
+
+.regua-pesos {
+  position: relative;
+  height: 16px;
+  font-size: 10px;
+  color: #444444;
+}
+
+.regua-pesos span {
+  position: absolute;
+  transform: translateX(-50%);
+  top: 0;
+}
+
+.regua {
+  position: relative;
+  display: flex;
+  height: 6px;
+  border-radius: 3px;
+  margin: 2px 0 6px;
+}
+
+.seg {
+  display: block;
+  height: 100%;
+}
+
+.seg-magreza { background: #42a5f5; border-radius: 3px 0 0 3px; }
+.seg-normal { background: #43b85a; }
+.seg-sobrepeso { background: #ffca3a; }
+.seg-obesidade { background: #ff5a5f; border-radius: 0 3px 3px 0; }
+
+.marcador {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border: 2px solid #222222;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.regua-rotulos {
+  display: flex;
+  font-size: 10px;
+  color: #444444;
+}
+
+.regua-rotulos span {
+  text-align: center;
+}
+
+.recomendacoes {
+  list-style: none;
+  text-align: left;
+}
+
+.recomendacoes li {
+  font-size: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #edf1ef;
+}
+
+.recomendacoes li::before {
+  content: '✓ ';
+  color: var(--verde);
+  font-weight: bold;
+}
+
+@media (max-width: 640px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .equipe {
+    grid-template-columns: 1fr;
+  }
+  .hero h1 {
+    font-size: 20px;
+  }
+}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Portal Saúde &amp; Bem-Estar{% endblock %}
+
+{% block content %}
+<section class="card login-card">
+  <h2>Entrar na sua conta</h2>
+
+  <form action="{{ url_for('login') }}" method="post">
+    <label for="usuario">Usuário / E-mail</label>
+    <input type="text" id="usuario" name="usuario" autocomplete="username" required>
+
+    <label for="senha">Senha</label>
+    <div class="senha-wrap">
+      <input type="password" id="senha" name="senha" autocomplete="current-password" required>
+      <button type="button" class="toggle-senha" id="toggle-senha" aria-label="Mostrar ou ocultar senha">👁️</button>
+    </div>
+
+    <div class="caps-aviso" id="caps-aviso" hidden>⚠️ Caps Lock está ativado.</div>
+
+    <button type="submit" class="btn">Entrar</button>
+  </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    var campoSenha = document.getElementById('senha');
+    var botaoOlho = document.getElementById('toggle-senha');
+    var aviso = document.getElementById('caps-aviso');
+
+    botaoOlho.addEventListener('click', function () {
+      var oculto = campoSenha.type === 'password';
+      campoSenha.type = oculto ? 'text' : 'password';
+      botaoOlho.style.opacity = oculto ? '0.5' : '1';
+    });
+
+    function verificarCaps(evento) {
+      if (evento && typeof evento.getModifierState === 'function') {
+        aviso.hidden = !evento.getModifierState('CapsLock');
+      }
+    }
+
+    ['keydown', 'keyup', 'mousedown', 'mouseup', 'click', 'mousemove'].forEach(function (tipo) {
+      document.addEventListener(tipo, verificarCaps);
+    });
+  })();
+</script>
+{% endblock %}

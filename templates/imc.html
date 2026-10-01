@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}IMC - Portal Saúde &amp; Bem-Estar{% endblock %}
+
+{% block content %}
+{% if erro %}
+
+<section class="card resultado">
+  <h2 class="titulo-imc">Não foi possível calcular</h2>
+  <p class="msg-erro">{{ erro }}</p>
+  <a class="btn" href="{{ url_for('index') }}">Voltar ao início</a>
+</section>
+
+{% else %}
+
+<section class="card resultado">
+  <h2 class="titulo-imc">Índice de Massa Corporal (IMC)
+    <button type="button" class="help" data-alvo="exp-imc" aria-label="Explicação do IMC">?</button>
+  </h2>
+
+  <div class="explicacao" id="exp-imc">
+    O IMC é calculado dividindo o peso (kg) pela altura ao quadrado (m²): <strong>IMC = peso ÷ altura²</strong>.
+    A classificação segue as faixas padrão da OMS: Magreza (&lt; 18,5), Normal (18,5 a 24,9), Sobrepeso (25 a 29,9) e Obesidade (≥ 30).
+    O peso ideal é estimado com IMC de 22: <strong>peso ideal = 22 × altura²</strong>.
+  </div>
+
+  <p class="dados">Peso: {{ peso_txt }} kg, Altura: {{ altura_cm }} cm, Sexo: {{ sexo_label }}, Idade: {{ idade }} anos</p>
+
+  <p class="valor-grande">{{ '%.2f'|format(imc) }}</p>
+  <span class="badge badge-{{ imc_classe }}">{{ imc_rotulo }}</span>
+
+  <p class="rotulo-pequeno">Peso ideal</p>
+  <p class="peso-ideal">{{ '%.2f'|format(peso_ideal) }} kg</p>
+
+  <div class="regua-wrap">
+    <div class="regua-pesos">
+      <span style="left: 17.5%;">{{ '%.1f'|format(lim1) }}kg</span>
+      <span style="left: 50%;">{{ '%.1f'|format(lim2) }}kg</span>
+      <span style="left: 75%;">{{ '%.1f'|format(lim3) }}kg</span>
+    </div>
+    <div class="regua">
+      <span class="seg seg-magreza" style="width: 17.5%;"></span>
+      <span class="seg seg-normal" style="width: 32.5%;"></span>
+      <span class="seg seg-sobrepeso" style="width: 25%;"></span>
+      <span class="seg seg-obesidade" style="width: 25%;"></span>
+      <span class="marcador" style="left: {{ posicao }}%;"></span>
+    </div>
+    <div class="regua-rotulos">
+      <span style="width: 17.5%;">Magreza</span>
+      <span style="width: 32.5%;">Normal</span>
+      <span style="width: 25%;">Sobrepeso</span>
+      <span style="width: 25%;">Obesidade</span>
+    </div>
+  </div>
+</section>
+
+<section class="card resultado">
+  <h2 class="titulo-imc">Percentual de gordura corporal (estimado)
+    <button type="button" class="help" data-alvo="exp-gordura" aria-label="Explicação do percentual de gordura">?</button>
+  </h2>
+
+  <div class="explicacao" id="exp-gordura">
+    Estimado pela fórmula de Deurenberg (1991):
+    <strong>%Gordura = 1,20 × IMC + 0,23 × Idade − 10,8 × Sexo − 5,4</strong>
+    (Sexo = 1 para homens, 0 para mulheres). Diferente do IMC simples, essa fórmula leva em conta a idade e o sexo para estimar a composição corporal.
+  </div>
+
+  <p class="dados">Estimativa pela fórmula de Deurenberg, que considera o IMC, a idade e o sexo</p>
+
+  <p class="valor-grande">{{ '%.1f'|format(gordura) }}%</p>
+  <span class="badge badge-{{ g_classe }}">{{ g_rotulo }}</span>
+</section>
+
+<section class="card">
+  <h2>Recomendações</h2>
+  <ul class="recomendacoes">
+    {% for item in recomendacoes %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="card">
+  <h2>Calcular Novamente</h2>
+  <form action="{{ url_for('imc_form') }}" method="get">
+    <label for="peso">Peso (kg)</label>
+    <input type="number" id="peso" name="peso" step="any" min="1" value="{{ peso_txt }}" required>
+
+    <label for="altura">Altura (m)</label>
+    <input type="number" id="altura" name="altura" step="any" min="0.5" value="{{ altura_valor }}" required>
+
+    <label for="sexo">Sexo</label>
+    <select id="sexo" name="sexo">
+      <option value="masculino" {% if sexo == 'masculino' %}selected{% endif %}>Masculino</option>
+      <option value="feminino" {% if sexo == 'feminino' %}selected{% endif %}>Feminino</option>
+      <option value="outro" {% if sexo == 'outro' %}selected{% endif %}>Outro</option>
+    </select>
+
+    <label for="idade">Idade</label>
+    <input type="number" id="idade" name="idade" min="1" max="120" value="{{ idade }}" required>
+
+    <button type="submit" class="btn">Recalcular</button>
+  </form>
+</section>
+
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll('.help').forEach(function (botao) {
+    botao.addEventListener('click', function () {
+      var alvo = document.getElementById(botao.dataset.alvo);
+      if (alvo) {
+        alvo.hidden = !alvo.hidden;
+      }
+    });
+  });
+</script>
+{% endblock %}
