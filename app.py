@@ -21,6 +21,7 @@ EQUIPE = [
     {'nome': 'Diego', 'papel': 'Aluno'},
     {'nome': 'Gustavo', 'papel': 'Aluno'},
     {'nome': 'Heitor', 'papel': 'Aluno'},
+    {'nome': 'Kauanny', 'papel': 'Aluna'},
 ]
 
 METAS = [
