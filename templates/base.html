@@ -1,28 +1,25 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}NutriVida{% endblock %}</title>
-    <link rel="icon" href="{{ url_for('static', filename='rastreamento.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Portal Saúde &amp; Bem-Estar{% endblock %}</title>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <header class="topo">
-        <div class="logo"> NutriVida</div>
-        <nav>
-            <a href="{{ url_for('index') }}">Início</a>
-            <a href="{{ url_for('calculadora') }}">Calculadora</a>
-            <a href="{{ url_for('perfil') }}">Meu Perfil</a>
-        </nav>
-    </header>
+  {% include 'header.html' %}
 
-    <main class="conteudo">
-        {% block conteudo %}{% endblock %}
-    </main>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
 
-    <footer class="rodape">
-        <p>&copy; 2026 NutriVida — Cuidando da sua alimentação</p>
-    </footer>
+  <footer class="site-footer">
+    &copy; {{ ano }} Portal Saúde &amp; Bem-Estar. Todos os direitos reservados.
+  </footer>
+
+  {% block scripts %}{% endblock %}
 </body>
 </html>
