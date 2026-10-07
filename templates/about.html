@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Sobre - Portal Saúde &amp; Bem-Estar{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h2>Nossa Missão</h2>
+  <p class="descricao">Promover saúde e qualidade de vida por meio de ferramentas simples e acessíveis que ajudam as pessoas a acompanhar seus indicadores corporais e adotar hábitos mais saudáveis.</p>
+</section>
+
+<section class="card">
+  <h2>Nossa Equipe</h2>
+  <div class="equipe">
+    {% for membro in equipe %}
+    <div class="membro">
+      <div class="avatar">{{ membro.nome[0]|upper }}</div>
+      <strong>{{ membro.nome }}</strong>
+      <span>{{ membro.papel }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="card">
+  <h2>Recursos Oferecidos</h2>
+
+  <div class="recurso">
+    <div class="recurso-icone">⚖️</div>
+    <div>
+      <h3>Calculadora de IMC</h3>
+      <p>Calcula o Índice de Massa Corporal a partir do peso e da altura informados, exibindo a classificação e o peso ideal para ajudar o usuário a acompanhar sua saúde.</p>
+    </div>
+  </div>
+
+  <div class="recurso">
+    <div class="recurso-icone">➗</div>
+    <div>
+      <h3>Operações Matemáticas</h3>
+      <p>Permite realizar somas, subtrações, multiplicações e divisões diretamente pelo site, exibindo o resultado de forma clara e estilizada.</p>
+    </div>
+  </div>
+
+  <div class="recurso">
+    <div class="recurso-icone">👤</div>
+    <div>
+      <h3>Painel de Perfil Personalizado</h3>
+      <p>Reúne os principais dados do usuário (nome, e-mail, idade, peso e altura) em um único painel, facilitando o acompanhamento das informações pessoais.</p>
+    </div>
+  </div>
+
+  <div class="recurso">
+    <div class="recurso-icone">🎯</div>
+    <div>
+      <h3>Acompanhamento de Metas</h3>
+      <p>Lista os objetivos de saúde do usuário, incentivando hábitos como atividade física regular e alimentação balanceada.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

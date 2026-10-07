@@ -1,15 +1,57 @@
 {% extends 'base.html' %}
-{% block title %}NutriVida - Início{% endblock %}
-{% block conteudo %}
+
+{% block title %}Início - Portal Saúde &amp; Bem-Estar{% endblock %}
+
+{% block content %}
 <section class="hero">
-    <h1>Bem-vindo(a) ao NutriVida</h1>
-    <p>Seu espaço para acompanhar a alimentação de forma simples e saudável. Calcule calorias, conheça sua nutricionista e cuide melhor da sua saúde.</p>
-    <a class="botao" href="{{ url_for('calculadora') }}">Ir para a Calculadora</a>
-    <a class="botao botao-secundario" href="{{ url_for('perfil') }}">Conhecer a Nutricionista</a>
+  <h1>Bem-vindo ao Portal Saúde &amp; Bem-Estar</h1>
+  <p>Acompanhe sua saúde, calcule seu IMC e cuide melhor de você todos os dias.</p>
 </section>
 
-<section class="imagens">
-    <img src="{{ url_for('static', filename='nutricao-1.svg') }}" alt="Ilustração de alimentação saudável">
-    <img src="{{ url_for('static', filename='nutricao-2.svg') }}" alt="Ilustração de balança nutricional">
-</section>
+<div class="grid-2">
+  <section class="card">
+    <h2>Operações Matemáticas</h2>
+    <form action="{{ url_for('math_form') }}" method="get">
+      <label for="operacao">Operação</label>
+      <select id="operacao" name="operacao">
+        <option value="soma">Soma</option>
+        <option value="subtracao">Subtração</option>
+        <option value="multiplicacao">Multiplicação</option>
+        <option value="divisao">Divisão</option>
+      </select>
+
+      <label for="primeiro">Primeiro número</label>
+      <input type="number" id="primeiro" name="primeiro" step="any" required>
+
+      <label for="segundo">Segundo número</label>
+      <input type="number" id="segundo" name="segundo" step="any" required>
+
+      <button type="submit" class="btn">Calcular</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Calculadora de IMC</h2>
+    <p class="descricao">Descubra seu Índice de Massa Corporal em segundos.</p>
+    <form action="{{ url_for('imc_form') }}" method="get">
+      <label for="peso">Peso (kg)</label>
+      <input type="number" id="peso" name="peso" step="any" min="1" required>
+
+      <label for="altura">Altura (m)</label>
+      <input type="number" id="altura" name="altura" step="any" min="0.5" required>
+
+      <label for="sexo">Sexo</label>
+      <select id="sexo" name="sexo">
+        <option value="masculino">Masculino</option>
+        <option value="feminino">Feminino</option>
+        <option value="outro">Outro</option>
+      </select>
+
+      <label for="idade">Idade</label>
+      <input type="number" id="idade" name="idade" min="1" max="120" required>
+
+      <button type="submit" class="btn">Ir para a Calculadora</button>
+    </form>
+  </section>
+</div>
 {% endblock %}
