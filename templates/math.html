@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Resultado - Portal Saúde &amp; Bem-Estar{% endblock %}
+
+{% block content %}
+<section class="card resultado">
+  <h2>Resultado da Operação: {{ op_nome }}</h2>
+
+  {% if simbolo %}
+  <p class="expressao">
+    {{ a }} <span class="op">{{ simbolo }}</span> {{ b }}{% if resultado is not none %} = <strong>{{ resultado }}</strong>{% endif %}
+  </p>
+  {% endif %}
+
+  {% if erro %}
+  <p class="msg-erro">{{ erro }}</p>
+  {% endif %}
+</section>
+{% endblock %}
