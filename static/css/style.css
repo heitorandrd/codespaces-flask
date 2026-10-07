@@ -21,6 +21,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   align-items: start;
+  margin-bottom: 16px;
 }
 
 .card {
@@ -54,7 +55,8 @@ label {
 }
 
 input,
-select {
+select,
+textarea {
   width: 100%;
   padding: 8px 10px;
   border: 1px solid #d5dcd9;
@@ -65,7 +67,8 @@ select {
 }
 
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
   outline: none;
   border-color: #1a73e8;
 }
@@ -419,11 +422,72 @@ select:focus {
   font-weight: bold;
 }
 
+textarea {
+  resize: vertical;
+}
+
+.sub-titulo {
+  font-size: 13px;
+  color: var(--verde);
+  margin: 14px 0 4px;
+}
+
+.form-linha {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.checks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: normal;
+  margin: 4px 0;
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.aviso-ok {
+  background: #e3f4e8;
+  border: 1px solid #a8d5b5;
+  color: #1b5e20;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.observacoes {
+  margin-top: 12px;
+  word-break: break-word;
+}
+
 @media (max-width: 640px) {
   .grid-2 {
     grid-template-columns: 1fr;
   }
   .equipe {
+    grid-template-columns: 1fr;
+  }
+  .form-linha {
     grid-template-columns: 1fr;
   }
   .hero h1 {

@@ -3,16 +3,45 @@
 {% block title %}Perfil - Portal Saúde &amp; Bem-Estar{% endblock %}
 
 {% block content %}
+{% with mensagens = get_flashed_messages() %}
+  {% for mensagem in mensagens %}
+  <div class="aviso-ok">✓ {{ mensagem }}</div>
+  {% endfor %}
+{% endwith %}
+
 <section class="card perfil">
   <div class="avatar">{{ inicial }}</div>
   <div class="perfil-info">
     <h2>{{ nome }}</h2>
     <p class="linha"><span class="rot">E-mail</span> {{ email }}</p>
-    <p class="linha"><span class="rot">Idade</span> {{ idade }} anos</p>
-    <p class="linha"><span class="rot">Peso</span> {{ peso }} kg</p>
-    <p class="linha"><span class="rot">Altura</span> {{ altura }} m</p>
+    {% if perfil.idade %}<p class="linha"><span class="rot">Idade</span> {{ perfil.idade }} anos</p>{% endif %}
+    {% if perfil.peso %}<p class="linha"><span class="rot">Peso</span> {{ perfil.peso }} kg</p>{% endif %}
+    {% if perfil.altura %}<p class="linha"><span class="rot">Altura</span> {{ perfil.altura }} m</p>{% endif %}
+    {% if perfil.sexo %}<p class="linha"><span class="rot">Sexo</span> {{ sexos[perfil.sexo] }}</p>{% endif %}
   </div>
 </section>
+
+{% if preenchido %}
+<section class="card">
+  <h2>Meus Interesses</h2>
+  {% if perfil.objetivo %}
+  <p class="linha"><span class="rot">Objetivo</span> {{ objetivos[perfil.objetivo] }}</p>
+  {% endif %}
+  {% if perfil.frequencia %}
+  <p class="linha"><span class="rot">Uso</span> {{ frequencias[perfil.frequencia] }}</p>
+  {% endif %}
+  {% if perfil.interesses %}
+  <div class="tags">
+    {% for chave in perfil.interesses %}
+    <span class="badge badge-normal">{{ interesses[chave] }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if perfil.observacoes %}
+  <p class="descricao observacoes">{{ perfil.observacoes }}</p>
+  {% endif %}
+</section>
+{% endif %}
 
 <section class="card">
   <h2>Minhas Metas</h2>
@@ -21,6 +50,82 @@
     <li>{{ meta }}</li>
     {% endfor %}
   </ul>
-  <a class="btn" href="{{ url_for('imc', peso=peso, altura=altura, idade=idade) }}">Calcular meu IMC</a>
+  {% if perfil.peso and perfil.altura %}
+  <a class="btn" href="{{ url_for('imc', peso=perfil.peso, altura=perfil.altura, idade=perfil.idade or '25', sexo=perfil.sexo or 'outro') }}">Calcular meu IMC</a>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>{% if preenchido %}Editar meus dados e interesses{% else %}Conte-nos o que você procura{% endif %}</h2>
+  {% if not preenchido %}
+  <p class="descricao">Preencha o formulário abaixo para personalizar o seu perfil. Todos os campos são opcionais.</p>
+  {% endif %}
+
+  {% if erro %}
+  <p class="msg-erro">{{ erro }}</p>
+  {% endif %}
+
+  <form action="{{ url_for('profile') }}" method="post">
+    <label for="nome">Nome</label>
+    <input type="text" id="nome" name="nome" maxlength="60" value="{{ perfil.nome or nome }}">
+
+    <div class="form-linha">
+      <div>
+        <label for="idade">Idade</label>
+        <input type="number" id="idade" name="idade" min="1" max="120" value="{{ perfil.idade or '' }}">
+      </div>
+      <div>
+        <label for="sexo">Sexo</label>
+        <select id="sexo" name="sexo">
+          <option value="">Prefiro não informar</option>
+          {% for chave, rotulo in sexos.items() %}
+          <option value="{{ chave }}" {% if perfil.sexo == chave %}selected{% endif %}>{{ rotulo }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-linha">
+      <div>
+        <label for="peso">Peso (kg)</label>
+        <input type="number" id="peso" name="peso" step="any" min="1" value="{{ perfil.peso or '' }}">
+      </div>
+      <div>
+        <label for="altura">Altura (m)</label>
+        <input type="number" id="altura" name="altura" step="any" min="0.5" value="{{ perfil.altura or '' }}">
+      </div>
+    </div>
+
+    <label for="objetivo">Meu principal objetivo</label>
+    <select id="objetivo" name="objetivo">
+      <option value="">Selecione</option>
+      {% for chave, rotulo in objetivos.items() %}
+      <option value="{{ chave }}" {% if perfil.objetivo == chave %}selected{% endif %}>{{ rotulo }}</option>
+      {% endfor %}
+    </select>
+
+    <label>O que quero fazer no portal</label>
+    <div class="checks">
+      {% for chave, rotulo in interesses.items() %}
+      <label class="check-item">
+        <input type="checkbox" name="interesses" value="{{ chave }}" {% if chave in perfil.interesses|default([]) %}checked{% endif %}>
+        {{ rotulo }}
+      </label>
+      {% endfor %}
+    </div>
+
+    <label for="frequencia">Com que frequência pretendo usar</label>
+    <select id="frequencia" name="frequencia">
+      <option value="">Selecione</option>
+      {% for chave, rotulo in frequencias.items() %}
+      <option value="{{ chave }}" {% if perfil.frequencia == chave %}selected{% endif %}>{{ rotulo }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="observacoes">Observações (opcional)</label>
+    <textarea id="observacoes" name="observacoes" rows="3" maxlength="300">{{ perfil.observacoes or '' }}</textarea>
+
+    <button type="submit" class="btn">Salvar perfil</button>
+  </form>
 </section>
 {% endblock %}

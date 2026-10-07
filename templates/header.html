@@ -3,8 +3,11 @@
     <a class="brand" href="{{ url_for('index') }}">Portal Saúde &amp; Bem-Estar</a>
     <nav>
       <a href="{{ url_for('index') }}">Início</a>
-      <a href="{{ url_for('about') }}">Sobre</a>
+      {% if usuario_logado %}
+      <a href="{{ url_for('logout') }}">Sair</a>
+      {% else %}
       <a href="{{ url_for('login') }}">Login</a>
+      {% endif %}
       <a href="{{ url_for('profile') }}">Perfil</a>
     </nav>
   </div>

@@ -1,9 +1,12 @@
+import os
 from datetime import datetime
 from math import isfinite
 
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, flash, redirect, render_template, request, session, url_for
 
 app = Flask(__name__)
+# Necessária para guardar o login na sessão. Em produção, defina a variável SECRET_KEY.
+app.secret_key = os.environ.get('SECRET_KEY', 'troque-esta-chave-em-producao')
 
 # ---------------------------------------------------------------
 # Dados fixos
@@ -29,6 +32,30 @@ METAS = [
     'Praticar atividade física 3x por semana',
     'Manter uma alimentação balanceada',
 ]
+
+# Opções do formulário de interesses do perfil
+OBJETIVOS = {
+    'emagrecer': 'Emagrecer de forma saudável',
+    'ganhar_massa': 'Ganhar massa muscular',
+    'manter_peso': 'Manter o peso atual',
+    'acompanhar_saude': 'Acompanhar minha saúde',
+    'conhecer': 'Apenas conhecer o site',
+}
+
+INTERESSES = {
+    'imc': 'Calcular meu IMC',
+    'gordura': 'Estimar meu percentual de gordura',
+    'matematica': 'Usar as operações matemáticas',
+    'metas': 'Acompanhar metas de saúde',
+    'dicas': 'Receber recomendações de hábitos saudáveis',
+}
+
+FREQUENCIAS = {
+    'diaria': 'Todos os dias',
+    'semanal': 'Algumas vezes por semana',
+    'mensal': 'Uma vez por mês',
+    'eventual': 'De vez em quando',
+}
 
 # Faixas de gordura: (limite superior, classe CSS, nome)
 FAIXAS_GORDURA = {
@@ -79,9 +106,58 @@ def formatar(valor):
     return str(int(valor)) if valor == int(valor) else str(valor)
 
 
+def ler_perfil(form, usuario):
+    """Lê e valida o formulário do perfil. Devolve (dados, erro)."""
+    dados = {
+        'nome': form.get('nome', '').strip()[:60] or usuario['nome'],
+        'idade': '',
+        'peso': '',
+        'altura': '',
+        'sexo': form.get('sexo', '') if form.get('sexo', '') in SEXOS else '',
+        'objetivo': form.get('objetivo', '') if form.get('objetivo', '') in OBJETIVOS else '',
+        'frequencia': form.get('frequencia', '') if form.get('frequencia', '') in FREQUENCIAS else '',
+        'interesses': [i for i in form.getlist('interesses') if i in INTERESSES],
+        'observacoes': form.get('observacoes', '').strip()[:300],
+    }
+
+    idade_txt = form.get('idade', '').strip()
+    peso_txt = form.get('peso', '').strip()
+    altura_txt = form.get('altura', '').strip()
+
+    try:
+        if idade_txt:
+            idade = int(num(idade_txt))
+            if not 1 <= idade <= 120:
+                return dados, 'A idade deve estar entre 1 e 120 anos.'
+            dados['idade'] = str(idade)
+
+        if peso_txt:
+            peso = num(peso_txt)
+            if not 0 < peso <= 500:
+                return dados, 'O peso deve estar entre 1 e 500 kg.'
+            dados['peso'] = formatar(peso)
+
+        if altura_txt:
+            altura = num(altura_txt)
+            if altura > 3:  # altura informada em centímetros
+                altura = altura / 100
+            if not 0.5 <= altura <= 2.8:
+                return dados, 'A altura deve ser informada em metros (ex.: 1,75).'
+            dados['altura'] = formatar(round(altura, 2))
+    except ValueError:
+        return dados, 'Idade, peso e altura precisam ser números.'
+
+    return dados, None
+
+
 @app.context_processor
 def injetar_ano():
     return {'ano': datetime.now().year}
+
+
+@app.context_processor
+def injetar_usuario():
+    return {'usuario_logado': 'usuario' in session}
 
 
 # ---------------------------------------------------------------
@@ -89,12 +165,13 @@ def injetar_ano():
 # ---------------------------------------------------------------
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', equipe=EQUIPE)
 
 
 @app.route('/about')
 def about():
-    return render_template('about.html', equipe=EQUIPE)
+    # A página "Sobre" agora faz parte da tela inicial
+    return redirect(url_for('index') + '#sobre')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -102,23 +179,52 @@ def login():
     if request.method == 'POST':
         usuario = request.form.get('usuario', '').strip()
         if usuario:
-            # A senha NÃO vai na URL
-            return redirect(url_for('profile', nome=usuario, email=usuario))
+            # A senha NÃO é guardada. Limpa qualquer dado de quem estava antes.
+            session.clear()
+            session['usuario'] = {'nome': usuario, 'email': usuario}
+            return redirect(url_for('profile'))
+    elif 'usuario' in session:
+        return redirect(url_for('profile'))
     return render_template('login.html')
 
 
-@app.route('/profile')
+@app.route('/logout')
+def logout():
+    session.clear()  # fecha o ciclo: login e perfil deixam de existir
+    return redirect(url_for('index'))
+
+
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    nome = request.args.get('nome', 'Visitante')
+    usuario = session.get('usuario')
+    if not usuario:
+        return redirect(url_for('login'))
+
+    perfil = session.get('perfil', {})
+    erro = None
+
+    if request.method == 'POST':
+        dados, erro = ler_perfil(request.form, usuario)
+        if erro is None:
+            session['perfil'] = dados
+            flash('Perfil atualizado com sucesso!')
+            return redirect(url_for('profile'))
+        perfil = dados  # mantém o que a pessoa digitou para ela corrigir
+
+    nome = perfil.get('nome') or usuario['nome']
     return render_template(
         'profile.html',
         nome=nome,
-        email=request.args.get('email', 'visitante@exemplo.com'),
-        idade=request.args.get('idade', '25'),
-        peso=request.args.get('peso', '70.5'),
-        altura=request.args.get('altura', '1.75'),
+        email=usuario['email'],
         inicial=nome[0].upper(),
+        perfil=perfil,
+        preenchido='perfil' in session,
+        erro=erro,
         metas=METAS,
+        objetivos=OBJETIVOS,
+        interesses=INTERESSES,
+        frequencias=FREQUENCIAS,
+        sexos=SEXOS,
     )
 
 
