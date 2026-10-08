@@ -43,7 +43,7 @@
       <span class="seg seg-normal" style="width: 32.5%;"></span>
       <span class="seg seg-sobrepeso" style="width: 25%;"></span>
       <span class="seg seg-obesidade" style="width: 25%;"></span>
-      <span class="marcador" style="left: {{ posicao }}%;"></span>
+      <span class="marcador" data-posicao="{{ posicao }}"></span>
     </div>
     <div class="regua-rotulos">
       <span style="width: 17.5%;">Magreza</span>
@@ -108,6 +108,10 @@
 
 {% block scripts %}
 <script>
+  document.querySelectorAll('.marcador').forEach(function (marcador) {
+    marcador.style.left = marcador.dataset.posicao + '%';
+  });
+
   document.querySelectorAll('.help').forEach(function (botao) {
     botao.addEventListener('click', function () {
       var alvo = document.getElementById(botao.dataset.alvo);

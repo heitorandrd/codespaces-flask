@@ -4,30 +4,134 @@
 
 {% block content %}
 <section class="hero">
-  <h1>Bem-vindo ao Portal Saúde &amp; Bem-Estar</h1>
-  <p>Acompanhe sua saúde, calcule seu IMC e cuide melhor de você todos os dias.</p>
+  <div class="hero-texto">
+    <h1>Bem-vindo ao Portal Saúde &amp; Bem-Estar</h1>
+    <p>Acompanhe sua saúde, calcule seu IMC e cuide melhor de você todos os dias.</p>
+  </div>
+  <img class="hero-img" src="{{ url_for('static', filename='617.jpg') }}" alt="Plano alimentar com frutas e legumes">
 </section>
 
-<div class="grid-2">
+<section class="card" id="sobre">
+  <div class="sobre-grid">
+    <div class="sobre-texto">
+      <h2>Sobre o Portal</h2>
+      <p class="descricao">O Portal Saúde &amp; Bem-Estar reúne em um só lugar ferramentas para você acompanhar sua saúde: calculadora de IMC com estimativa de gordura corporal, cálculo de gasto calórico, perfil com metas e recomendações de hábitos.</p>
+      <h3 class="sub-titulo">Nossa Missão</h3>
+      <p class="descricao">Promover saúde e qualidade de vida por meio de ferramentas simples e acessíveis que ajudam as pessoas a acompanhar seus indicadores corporais e adotar hábitos mais saudáveis.</p>
+    </div>
+    <img class="sobre-img" src="{{ url_for('static', filename='images/nutricao.png') }}" alt="Ilustração sobre nutrição" onerror="this.style.display='none'">
+  </div>
+</section>
+
+<section class="card">
+  <h2>Nossa Equipe</h2>
+  <div class="equipe">
+    {% for membro in equipe %}
+    <div class="membro">
+      <div class="avatar">{{ membro.nome[0]|upper }}</div>
+      <strong>{{ membro.nome }}</strong>
+      <span>{{ membro.papel }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="card">
+  <h2>Recursos Oferecidos</h2>
+
+  <div class="recurso">
+    <div class="recurso-icone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7.5 9.5a4.5 4.5 0 0 1 9 0"/><path d="M12 9.5l2-2.5"/></svg>
+    </div>
+    <div>
+      <h3>Calculadora de IMC</h3>
+      <p>Calcula o Índice de Massa Corporal a partir do peso e da altura informados, exibindo a classificação e o peso ideal para ajudar o usuário a acompanhar sua saúde.</p>
+    </div>
+  </div>
+
+  <div class="recurso">
+    <div class="recurso-icone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5c.8 3.6 5.5 5.6 5.5 10.5a5.5 5.5 0 0 1-11 0c0-2.2 1-3.7 2.2-4.8.2 1.6.9 2.6 2 3.1-.3-3.5.2-6 1.3-8.8z"/></svg>
+    </div>
+    <div>
+      <h3>Gasto Calórico</h3>
+      <p>Estima quantas calorias o corpo gasta em repouso e ao longo do dia, de acordo com sexo, idade, peso, altura e nível de atividade física, com o resultado na própria página.</p>
+    </div>
+  </div>
+
+  <div class="recurso">
+    <div class="recurso-icone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+    </div>
+    <div>
+      <h3>Perfil e Interesses</h3>
+      <p>Depois de entrar, o usuário preenche um formulário com seus dados, objetivo e interesses. Tudo aparece em Perfil até clicar em Sair.</p>
+    </div>
+  </div>
+
+  <div class="recurso">
+    <div class="recurso-icone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg>
+    </div>
+    <div>
+      <h3>Acompanhamento de Metas</h3>
+      <p>Lista os objetivos de saúde do usuário, incentivando hábitos como atividade física regular e alimentação balanceada.</p>
+    </div>
+  </div>
+</section>
+
+<div class="grid-2" id="ferramentas">
   <section class="card">
-    <h2>Operações Matemáticas</h2>
-    <form action="{{ url_for('math_form') }}" method="get">
-      <label for="operacao">Operação</label>
-      <select id="operacao" name="operacao">
-        <option value="soma">Soma</option>
-        <option value="subtracao">Subtração</option>
-        <option value="multiplicacao">Multiplicação</option>
-        <option value="divisao">Divisão</option>
+    <h2>Gasto Calórico</h2>
+    <p class="descricao">Descubra quantas calorias seu corpo gasta em repouso e por dia.</p>
+    <form action="{{ url_for('index') }}#resultado-calorias" method="get">
+      <label for="cal_sexo">Sexo</label>
+      <select id="cal_sexo" name="cal_sexo">
+        <option value="masculino" {% if cal.sexo == 'masculino' %}selected{% endif %}>Masculino</option>
+        <option value="feminino" {% if cal.sexo == 'feminino' %}selected{% endif %}>Feminino</option>
       </select>
 
-      <label for="primeiro">Primeiro número</label>
-      <input type="number" id="primeiro" name="primeiro" step="any" required>
+      <label for="cal_idade">Idade</label>
+      <input type="number" id="cal_idade" name="cal_idade" min="15" max="120" value="{{ cal.idade }}" required>
 
-      <label for="segundo">Segundo número</label>
-      <input type="number" id="segundo" name="segundo" step="any" required>
+      <label for="cal_peso">Peso (kg)</label>
+      <input type="number" id="cal_peso" name="cal_peso" step="any" min="20" value="{{ cal.peso }}" required>
+
+      <label for="cal_altura">Altura (m)</label>
+      <input type="number" id="cal_altura" name="cal_altura" step="any" min="0.5" value="{{ cal.altura }}" required>
+
+      <label for="cal_atividade">Nível de atividade física</label>
+      <select id="cal_atividade" name="cal_atividade">
+        {% for chave, item in atividades.items() %}
+        <option value="{{ chave }}" {% if cal.atividade == chave %}selected{% endif %}>{{ item[0] }}</option>
+        {% endfor %}
+      </select>
 
       <button type="submit" class="btn">Calcular</button>
     </form>
+
+    {% if calorias %}
+    <div class="resultado-cal" id="resultado-calorias">
+      {% if calorias.erro %}
+      <p class="msg-erro">{{ calorias.erro }}</p>
+      {% else %}
+      <p class="rotulo-pequeno">Gasto em repouso (TMB)</p>
+      <p class="valor-grande">{{ calorias.tmb }} <span class="unidade">kcal/dia</span></p>
+
+      <p class="rotulo-pequeno">Gasto total diário</p>
+      <p class="valor-medio">{{ calorias.gasto_total }} <span class="unidade">kcal/dia</span></p>
+      <p class="dados">{{ calorias.atividade }} (fator {{ calorias.fator }})</p>
+
+      <div class="metas-cal">
+        <div class="linha-cal"><span>Para emagrecer</span><strong>{{ calorias.emagrecer }} kcal</strong></div>
+        <div class="linha-cal"><span>Para manter o peso</span><strong>{{ calorias.gasto_total }} kcal</strong></div>
+        <div class="linha-cal"><span>Para ganhar massa</span><strong>{{ calorias.ganhar }} kcal</strong></div>
+      </div>
+
+      <p class="nota">Estimativa pela fórmula de Mifflin-St Jeor. Para emagrecer, o cálculo reduz cerca de 500 kcal, sem ficar abaixo do gasto em repouso. Não substitui a avaliação de um nutricionista.</p>
+      {% endif %}
+    </div>
+    {% endif %}
   </section>
 
   <section class="card">
@@ -54,60 +158,4 @@
     </form>
   </section>
 </div>
-
-<section class="card" id="sobre">
-  <h2>Sobre o Portal</h2>
-  <p class="descricao">O Portal Saúde &amp; Bem-Estar reúne em um só lugar ferramentas para você acompanhar sua saúde: calculadora de IMC com estimativa de gordura corporal, operações matemáticas, perfil com metas e recomendações de hábitos.</p>
-  <h3 class="sub-titulo">Nossa Missão</h3>
-  <p class="descricao">Promover saúde e qualidade de vida por meio de ferramentas simples e acessíveis que ajudam as pessoas a acompanhar seus indicadores corporais e adotar hábitos mais saudáveis.</p>
-</section>
-
-<section class="card">
-  <h2>Nossa Equipe</h2>
-  <div class="equipe">
-    {% for membro in equipe %}
-    <div class="membro">
-      <div class="avatar">{{ membro.nome[0]|upper }}</div>
-      <strong>{{ membro.nome }}</strong>
-      <span>{{ membro.papel }}</span>
-    </div>
-    {% endfor %}
-  </div>
-</section>
-
-<section class="card">
-  <h2>Recursos Oferecidos</h2>
-
-  <div class="recurso">
-    <div class="recurso-icone">⚖️</div>
-    <div>
-      <h3>Calculadora de IMC</h3>
-      <p>Calcula o Índice de Massa Corporal a partir do peso e da altura informados, exibindo a classificação e o peso ideal para ajudar o usuário a acompanhar sua saúde.</p>
-    </div>
-  </div>
-
-  <div class="recurso">
-    <div class="recurso-icone">➗</div>
-    <div>
-      <h3>Operações Matemáticas</h3>
-      <p>Permite realizar somas, subtrações, multiplicações e divisões diretamente pelo site, exibindo o resultado de forma clara e estilizada.</p>
-    </div>
-  </div>
-
-  <div class="recurso">
-    <div class="recurso-icone">👤</div>
-    <div>
-      <h3>Perfil e Interesses</h3>
-      <p>Depois de entrar, o usuário preenche um formulário com seus dados, objetivo e interesses. Tudo aparece em Perfil até clicar em Sair.</p>
-    </div>
-  </div>
-
-  <div class="recurso">
-    <div class="recurso-icone">🎯</div>
-    <div>
-      <h3>Acompanhamento de Metas</h3>
-      <p>Lista os objetivos de saúde do usuário, incentivando hábitos como atividade física regular e alimentação balanceada.</p>
-    </div>
-  </div>
-</section>
 {% endblock %}

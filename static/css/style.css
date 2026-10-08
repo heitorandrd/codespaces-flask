@@ -1,10 +1,17 @@
 .hero {
   background: linear-gradient(135deg, #1f6b56 0%, #2fa083 100%);
   color: #ffffff;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
   border-radius: 8px;
-  padding: 38px 24px;
+  padding: 28px 24px;
   margin-bottom: 20px;
+}
+
+.hero-texto {
+  flex: 1;
 }
 
 .hero h1 {
@@ -14,6 +21,34 @@
 
 .hero p {
   font-size: 12px;
+}
+
+.hero-img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 6px;
+  flex-shrink: 0;
+}
+
+.sobre-grid {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.sobre-texto {
+  flex: 1;
+}
+
+.sobre-img {
+  width: 200px;
+  max-width: 40%;
+  height: auto;
+  border-radius: 8px;
+  flex-shrink: 0;
 }
 
 .grid-2 {
@@ -101,7 +136,7 @@ textarea:focus {
 }
 
 .senha-wrap input {
-  padding-right: 40px;
+  padding-right: 72px;
 }
 
 .toggle-senha {
@@ -112,8 +147,11 @@ textarea:focus {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 16px;
-  line-height: 1;
+  font-size: 11px;
+  font-weight: bold;
+  font-family: inherit;
+  color: var(--verde);
+  padding: 4px;
 }
 
 .caps-aviso {
@@ -180,7 +218,7 @@ textarea:focus {
 
 .equipe {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: 12px;
 }
 
@@ -214,10 +252,16 @@ textarea:focus {
 }
 
 .recurso-icone {
-  font-size: 16px;
-  width: 22px;
-  text-align: center;
+  width: 24px;
+  height: 24px;
+  color: var(--verde);
   flex-shrink: 0;
+}
+
+.recurso-icone svg {
+  width: 24px;
+  height: 24px;
+  display: block;
 }
 
 .recurso h3 {
@@ -480,6 +524,45 @@ input[type="checkbox"] {
   word-break: break-word;
 }
 
+.resultado-cal {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #edf1ef;
+  text-align: center;
+}
+
+.unidade {
+  font-size: 12px;
+  font-weight: normal;
+  color: #555555;
+}
+
+.valor-medio {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--verde);
+  margin: 6px 0;
+}
+
+.metas-cal {
+  margin-top: 12px;
+  text-align: left;
+}
+
+.linha-cal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #edf1ef;
+}
+
+.nota {
+  font-size: 11px;
+  color: #666666;
+  margin-top: 12px;
+}
+
 @media (max-width: 640px) {
   .grid-2 {
     grid-template-columns: 1fr;
@@ -490,7 +573,17 @@ input[type="checkbox"] {
   .form-linha {
     grid-template-columns: 1fr;
   }
+  .hero {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
   .hero h1 {
     font-size: 20px;
+  }
+  .sobre-grid {
+    flex-direction: column;
+  }
+  .sobre-img {
+    max-width: 70%;
   }
 }

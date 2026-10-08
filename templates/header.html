@@ -1,14 +1,22 @@
 <header class="site-header">
   <div class="header-inner">
-    <a class="brand" href="{{ url_for('index') }}">Portal Saúde &amp; Bem-Estar</a>
-    <nav>
-      <a href="{{ url_for('index') }}">Início</a>
-      {% if usuario_logado %}
-      <a href="{{ url_for('logout') }}">Sair</a>
-      {% else %}
-      <a href="{{ url_for('login') }}">Login</a>
-      {% endif %}
+    <div class="header-esq">
+      <a class="brand" href="{{ url_for('index') }}">Portal Saúde &amp; Bem-Estar</a>
+      <nav>
+        <a href="{{ url_for('index') }}">Início</a>
+      </nav>
+    </div>
+
+    <nav class="header-centro">
       <a href="{{ url_for('profile') }}">Perfil</a>
+    </nav>
+
+    <nav class="header-dir">
+      {% if usuario_logado %}
+      <a class="nav-destaque" href="{{ url_for('logout') }}">Sair</a>
+      {% else %}
+      <a class="nav-destaque" href="{{ url_for('login') }}">Login</a>
+      {% endif %}
     </nav>
   </div>
 </header>

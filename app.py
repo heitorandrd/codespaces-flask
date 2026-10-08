@@ -11,13 +11,6 @@ app.secret_key = os.environ.get('SECRET_KEY', 'troque-esta-chave-em-producao')
 # ---------------------------------------------------------------
 # Dados fixos
 # ---------------------------------------------------------------
-OPERACOES = {
-    'soma': ('Soma', '+'),
-    'subtracao': ('Subtração', '-'),
-    'multiplicacao': ('Multiplicação', '×'),
-    'divisao': ('Divisão', '÷'),
-}
-
 SEXOS = {'masculino': 'Masculino', 'feminino': 'Feminino', 'outro': 'Outro'}
 
 EQUIPE = [
@@ -45,7 +38,7 @@ OBJETIVOS = {
 INTERESSES = {
     'imc': 'Calcular meu IMC',
     'gordura': 'Estimar meu percentual de gordura',
-    'matematica': 'Usar as operações matemáticas',
+    'calorias': 'Calcular meu gasto calórico',
     'metas': 'Acompanhar metas de saúde',
     'dicas': 'Receber recomendações de hábitos saudáveis',
 }
@@ -55,6 +48,15 @@ FREQUENCIAS = {
     'semanal': 'Algumas vezes por semana',
     'mensal': 'Uma vez por mês',
     'eventual': 'De vez em quando',
+}
+
+# Níveis de atividade física: (descrição, fator multiplicador do gasto em repouso)
+ATIVIDADES = {
+    'sedentario': ('Sedentário (pouco ou nenhum exercício)', 1.2),
+    'leve': ('Leve (exercício 1 a 3 dias por semana)', 1.375),
+    'moderado': ('Moderado (exercício 3 a 5 dias por semana)', 1.55),
+    'intenso': ('Intenso (exercício 6 a 7 dias por semana)', 1.725),
+    'muito_intenso': ('Muito intenso (treino pesado ou trabalho físico)', 1.9),
 }
 
 # Faixas de gordura: (limite superior, classe CSS, nome)
@@ -104,6 +106,57 @@ def num(texto):
 def formatar(valor):
     """62.0 vira '62' e 20.67 continua '20.67'."""
     return str(int(valor)) if valor == int(valor) else str(valor)
+
+
+def calcular_calorias(args):
+    """Gasto calórico pela fórmula de Mifflin-St Jeor. Devolve (campos do formulário, resultado)."""
+    campos = {
+        'sexo': args.get('cal_sexo', 'masculino'),
+        'idade': args.get('cal_idade', '').strip(),
+        'peso': args.get('cal_peso', '').strip(),
+        'altura': args.get('cal_altura', '').strip(),
+        'atividade': args.get('cal_atividade', 'sedentario'),
+    }
+    if campos['sexo'] not in ('masculino', 'feminino'):
+        campos['sexo'] = 'masculino'
+    if campos['atividade'] not in ATIVIDADES:
+        campos['atividade'] = 'sedentario'
+
+    try:
+        idade = int(num(campos['idade']))
+        peso = num(campos['peso'])
+        altura = num(campos['altura'])
+    except ValueError:
+        return campos, {'erro': 'Preencha idade, peso e altura com números.'}
+
+    if altura > 3:  # altura informada em centímetros
+        altura = altura / 100
+
+    if not 15 <= idade <= 120:
+        return campos, {'erro': 'A idade deve estar entre 15 e 120 anos.'}
+    if not 20 <= peso <= 500:
+        return campos, {'erro': 'O peso deve estar entre 20 e 500 kg.'}
+    if not 0.5 <= altura <= 2.8:
+        return campos, {'erro': 'A altura deve ser informada em metros (ex.: 1,75).'}
+
+    # TMB = 10 x peso(kg) + 6,25 x altura(cm) - 5 x idade + 5 (homens) ou - 161 (mulheres)
+    ajuste = 5 if campos['sexo'] == 'masculino' else -161
+    tmb = 10 * peso + 6.25 * (altura * 100) - 5 * idade + ajuste
+    if tmb <= 0:
+        return campos, {'erro': 'Os valores informados não são compatíveis. Confira os dados.'}
+
+    descricao, fator = ATIVIDADES[campos['atividade']]
+    gasto_total = tmb * fator
+
+    return campos, {
+        'erro': None,
+        'tmb': round(tmb),
+        'gasto_total': round(gasto_total),
+        'atividade': descricao,
+        'fator': fator,
+        'emagrecer': round(max(gasto_total - 500, tmb)),  # nunca abaixo do gasto em repouso
+        'ganhar': round(gasto_total + 300),
+    }
 
 
 def ler_perfil(form, usuario):
@@ -165,7 +218,12 @@ def injetar_usuario():
 # ---------------------------------------------------------------
 @app.route('/')
 def index():
-    return render_template('index.html', equipe=EQUIPE)
+    calorias = None
+    campos_cal = {'sexo': 'masculino', 'idade': '', 'peso': '', 'altura': '', 'atividade': 'sedentario'}
+    if 'cal_peso' in request.args:  # o formulário de calorias foi enviado
+        campos_cal, calorias = calcular_calorias(request.args)
+    return render_template('index.html', equipe=EQUIPE, calorias=calorias,
+                           cal=campos_cal, atividades=ATIVIDADES)
 
 
 @app.route('/about')
@@ -226,57 +284,6 @@ def profile():
         frequencias=FREQUENCIAS,
         sexos=SEXOS,
     )
-
-
-# ---------------------------------------------------------------
-# Operações matemáticas
-# ---------------------------------------------------------------
-@app.route('/calcular-math')
-def math_form():
-    """Recebe o formulário da página inicial e redireciona para /math/<op>/<a>/<b>."""
-    op = request.args.get('operacao', 'soma')
-    a = request.args.get('primeiro', '').replace(',', '.')
-    b = request.args.get('segundo', '').replace(',', '.')
-    try:
-        num(a)
-        num(b)
-    except ValueError:
-        return redirect(url_for('index'))
-    return redirect(url_for('math_result', op=op, a=a, b=b))
-
-
-@app.route('/math/<op>/<a>/<b>')
-def math_result(op, a, b):
-    nome, simbolo = OPERACOES.get(op, ('Inválida', None))
-
-    try:
-        x = num(a)
-        y = num(b)
-    except ValueError:
-        return render_template('math.html', op_nome=nome, simbolo=None, a=a, b=b,
-                               resultado=None, erro='Os valores precisam ser números.')
-
-    if simbolo is None:
-        return render_template('math.html', op_nome=nome, simbolo=None, a=a, b=b,
-                               resultado=None, erro='Operação inválida.')
-
-    if op == 'divisao' and y == 0:
-        return render_template('math.html', op_nome=nome, simbolo=simbolo,
-                               a=formatar(x), b=formatar(y), resultado=None,
-                               erro='Não é possível dividir por zero.')
-
-    if op == 'soma':
-        valor = x + y
-    elif op == 'subtracao':
-        valor = x - y
-    elif op == 'multiplicacao':
-        valor = x * y
-    else:
-        valor = x / y
-
-    return render_template('math.html', op_nome=nome, simbolo=simbolo,
-                           a=formatar(x), b=formatar(y),
-                           resultado=formatar(round(valor, 2)), erro=None)
 
 
 # ---------------------------------------------------------------

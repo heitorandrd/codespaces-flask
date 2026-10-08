@@ -13,10 +13,10 @@
     <label for="senha">Senha</label>
     <div class="senha-wrap">
       <input type="password" id="senha" name="senha" autocomplete="current-password" required>
-      <button type="button" class="toggle-senha" id="toggle-senha" aria-label="Mostrar ou ocultar senha">👁️</button>
+      <button type="button" class="toggle-senha" id="toggle-senha" aria-label="Mostrar ou ocultar senha">Mostrar</button>
     </div>
 
-    <div class="caps-aviso" id="caps-aviso" hidden>⚠️ Caps Lock está ativado.</div>
+    <div class="caps-aviso" id="caps-aviso" hidden>Caps Lock está ativado.</div>
 
     <button type="submit" class="btn">Entrar</button>
   </form>
@@ -33,7 +33,7 @@
     botaoOlho.addEventListener('click', function () {
       var oculto = campoSenha.type === 'password';
       campoSenha.type = oculto ? 'text' : 'password';
-      botaoOlho.style.opacity = oculto ? '0.5' : '1';
+      botaoOlho.textContent = oculto ? 'Ocultar' : 'Mostrar';
     });
 
     function verificarCaps(evento) {
