@@ -136,7 +136,7 @@ textarea:focus {
 }
 
 .senha-wrap input {
-  padding-right: 72px;
+  padding-right: 42px;
 }
 
 .toggle-senha {
@@ -147,11 +147,32 @@ textarea:focus {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 11px;
-  font-weight: bold;
-  font-family: inherit;
   color: var(--verde);
   padding: 4px;
+  line-height: 0;
+}
+
+.toggle-senha svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.toggle-senha:hover {
+  color: var(--verde-escuro);
+}
+
+/* Senha oculta: mostra o olho riscado. Senha visível (.mostrando): mostra o olho aberto. */
+.toggle-senha .icone-aberto {
+  display: none;
+}
+
+.toggle-senha.mostrando .icone-aberto {
+  display: block;
+}
+
+.toggle-senha.mostrando .icone-riscado {
+  display: none;
 }
 
 .caps-aviso {
