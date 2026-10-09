@@ -5,12 +5,10 @@ from math import isfinite
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 
 app = Flask(__name__)
-# Necessária para guardar o login na sessão. Em produção, defina a variável SECRET_KEY.
+# guardar o login na sessão.
 app.secret_key = os.environ.get('SECRET_KEY', 'troque-esta-chave-em-producao')
 
-# ---------------------------------------------------------------
 # Dados fixos
-# ---------------------------------------------------------------
 SEXOS = {'masculino': 'Masculino', 'feminino': 'Feminino', 'outro': 'Outro'}
 
 EQUIPE = [
@@ -26,7 +24,7 @@ METAS = [
     'Manter uma alimentação balanceada',
 ]
 
-# Opções do formulário de interesses do perfil
+# Opções do formulári
 OBJETIVOS = {
     'emagrecer': 'Emagrecer de forma saudável',
     'ganhar_massa': 'Ganhar massa muscular',
@@ -50,7 +48,7 @@ FREQUENCIAS = {
     'eventual': 'De vez em quando',
 }
 
-# Níveis de atividade física: (descrição, fator multiplicador do gasto em repouso)
+# Níveis de atividade física
 ATIVIDADES = {
     'sedentario': ('Sedentário (pouco ou nenhum exercício)', 1.2),
     'leve': ('Leve (exercício 1 a 3 dias por semana)', 1.375),
@@ -59,7 +57,7 @@ ATIVIDADES = {
     'muito_intenso': ('Muito intenso (treino pesado ou trabalho físico)', 1.9),
 }
 
-# Faixas de gordura: (limite superior, classe CSS, nome)
+# Faixas de gordura
 FAIXAS_GORDURA = {
     'masculino': [(6, 'essencial', 'Essencial'), (14, 'atletico', 'Atlético'),
                   (18, 'fitness', 'Fitness'), (25, 'aceitavel', 'Aceitável')],
@@ -92,9 +90,7 @@ RECOMENDACOES = {
 }
 
 
-# ---------------------------------------------------------------
 # Funções auxiliares
-# ---------------------------------------------------------------
 def num(texto):
     """Converte texto em número (aceita vírgula). Dá ValueError se não for número."""
     valor = float(str(texto).strip().replace(',', '.'))
@@ -213,9 +209,7 @@ def injetar_usuario():
     return {'usuario_logado': 'usuario' in session}
 
 
-# ---------------------------------------------------------------
 # Páginas simples
-# ---------------------------------------------------------------
 @app.route('/')
 def index():
     calorias = None
@@ -228,7 +222,7 @@ def index():
 
 @app.route('/about')
 def about():
-    # A página "Sobre" agora faz parte da tela inicial
+    # "Sobre" JUNTA CM da tela inicial
     return redirect(url_for('index') + '#sobre')
 
 
@@ -237,7 +231,7 @@ def login():
     if request.method == 'POST':
         usuario = request.form.get('usuario', '').strip()
         if usuario:
-            # A senha NÃO é guardada. Limpa qualquer dado de quem estava antes.
+            # A senha NÃO é guardada.
             session.clear()
             session['usuario'] = {'nome': usuario, 'email': usuario}
             return redirect(url_for('profile'))
@@ -248,7 +242,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.clear()  # fecha o ciclo: login e perfil deixam de existir
+    session.clear()  # login e perfil deixam de existir
     return redirect(url_for('index'))
 
 
@@ -267,7 +261,7 @@ def profile():
             session['perfil'] = dados
             flash('Perfil atualizado com sucesso!')
             return redirect(url_for('profile'))
-        perfil = dados  # mantém o que a pessoa digitou para ela corrigir
+        perfil = dados  # mantém o que a pessoa digito
 
     nome = perfil.get('nome') or usuario['nome']
     return render_template(
@@ -286,9 +280,8 @@ def profile():
     )
 
 
-# ---------------------------------------------------------------
 # Calculadora de IMC
-# ---------------------------------------------------------------
+
 @app.route('/calcular-imc')
 def imc_form():
     """Recebe o formulário e redireciona para /imc/<peso>/<altura>."""
