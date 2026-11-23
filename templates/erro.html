@@ -1,11 +1,21 @@
 {% extends 'base.html' %}
-{% block title %}NutriVida - Erro{% endblock %}
-{% block conteudo %}
-<section class="form-card erro">
-    <h1>Ops! Valores inválidos</h1>
-    <p>Verifique se você digitou números válidos e maiores que zero para o peso e para as calorias por 100g.</p>
 
-    <a class="botao" href="{{ url_for('calculadora') }}">Tentar novamente</a>
-    <a class="botao botao-secundario" href="{{ url_for('index') }}">Voltar ao início</a>
+{% block title %}Erro {{ codigo }} - Portal Saúde &amp; Bem-Estar{% endblock %}
+
+{% block content %}
+<section class="card erro-card">
+  <div class="erro-icone erro-{{ tipo }}">
+    {% if tipo == 'bloqueio' %}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.2"/></svg>
+    {% elif tipo == 'escudo' %}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
+    {% else %}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    {% endif %}
+  </div>
+  <h2 class="erro-codigo erro-{{ tipo }}">HTTP {{ codigo }}: {{ titulo }}</h2>
+  <p class="erro-sub">{{ subtitulo }}</p>
+  <p class="descricao">{{ mensagem }}</p>
+  <a class="btn" href="{{ botao_url }}">{{ botao_texto }}</a>
 </section>
 {% endblock %}

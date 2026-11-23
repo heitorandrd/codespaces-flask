@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 .env
 .DS_Store
+
+# dados locais (contém hashes de senha) e fotos enviadas pelos usuários
+data/
+static/uploads/

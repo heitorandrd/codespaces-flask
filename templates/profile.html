@@ -3,17 +3,15 @@
 {% block title %}Perfil - Portal Saúde &amp; Bem-Estar{% endblock %}
 
 {% block content %}
-{% with mensagens = get_flashed_messages() %}
-  {% for mensagem in mensagens %}
-  <div class="aviso-ok">✓ {{ mensagem }}</div>
-  {% endfor %}
-{% endwith %}
-
 <section class="card perfil">
-  <div class="avatar">{{ inicial }}</div>
+  <img class="avatar-img avatar-grande" src="{{ foto_url(usuario) }}" alt="Foto de {{ usuario.nome }}">
   <div class="perfil-info">
-    <h2>{{ nome }}</h2>
-    <p class="linha"><span class="rot">E-mail</span> {{ email }}</p>
+    <h2>{{ usuario.nome }}</h2>
+    <p class="linha"><span class="rot">E-mail</span> {{ usuario.email }}</p>
+    <p class="linha"><span class="rot">Função</span>
+      <span class="badge {% if usuario.funcao == 'admin' %}badge-admin{% else %}badge-comum{% endif %}">{{ funcoes[usuario.funcao] }}</span>
+    </p>
+    <p class="linha"><span class="rot">Desde</span> {{ usuario.data_cadastro|data_br }}</p>
     {% if perfil.idade %}<p class="linha"><span class="rot">Idade</span> {{ perfil.idade }} anos</p>{% endif %}
     {% if perfil.peso %}<p class="linha"><span class="rot">Peso</span> {{ perfil.peso }} kg</p>{% endif %}
     {% if perfil.altura %}<p class="linha"><span class="rot">Altura</span> {{ perfil.altura }} m</p>{% endif %}
@@ -50,13 +48,16 @@
     <li>{{ meta }}</li>
     {% endfor %}
   </ul>
-  {% if perfil.peso and perfil.altura %}
-  <a class="btn" href="{{ url_for('imc', peso=perfil.peso, altura=perfil.altura, idade=perfil.idade or '25', sexo=perfil.sexo or 'outro') }}">Calcular meu IMC</a>
-  {% endif %}
+  <div class="acoes-linha">
+    <a class="btn" href="{{ url_for('editar_usuario') }}">Editar Perfil</a>
+    {% if perfil.peso and perfil.altura %}
+    <a class="btn btn-secundario" href="{{ url_for('imc', peso=perfil.peso, altura=perfil.altura, idade=perfil.idade or '25', sexo=perfil.sexo or 'outro') }}">Calcular meu IMC</a>
+    {% endif %}
+  </div>
 </section>
 
 <section class="card">
-  <h2>{% if preenchido %}Editar meus dados e interesses{% else %}Conte-nos o que você procura{% endif %}</h2>
+  <h2>{% if preenchido %}Meus dados de saúde e interesses{% else %}Conte-nos o que você procura{% endif %}</h2>
   {% if not preenchido %}
   <p class="descricao">Preencha o formulário abaixo para personalizar o seu perfil. Todos os campos são opcionais.</p>
   {% endif %}
@@ -66,9 +67,6 @@
   {% endif %}
 
   <form action="{{ url_for('profile') }}" method="post">
-    <label for="nome">Nome</label>
-    <input type="text" id="nome" name="nome" maxlength="60" value="{{ perfil.nome or nome }}">
-
     <div class="form-linha">
       <div>
         <label for="idade">Idade</label>

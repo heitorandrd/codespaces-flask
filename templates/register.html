@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import campo_senha, campo_foto %}
+
+{% block title %}{% if modo_admin %}Novo usuário{% else %}Criar conta{% endif %} - Portal Saúde &amp; Bem-Estar{% endblock %}
+
+{% block content %}
+<section class="card cadastro-card">
+  <h2>{% if modo_admin %}Novo usuário{% else %}Criar nova conta{% endif %}</h2>
+
+  {% if erro %}
+  <div class="alerta alerta-erro" role="alert">{{ erro }}</div>
+  {% endif %}
+
+  <form action="{{ url_for('admin_novo_usuario') if modo_admin else url_for('register') }}" method="post" enctype="multipart/form-data">
+    <label for="nome">Nome completo</label>
+    <input type="text" id="nome" name="nome" value="{{ campos.nome }}" minlength="2" maxlength="80"
+           autocomplete="name" required>
+
+    <label for="email">Usuário / E-mail</label>
+    <input type="email" id="email" name="email" value="{{ campos.email }}" maxlength="120"
+           autocomplete="email" required>
+
+    {{ campo_senha('senha', 'senha', 'Senha', autocomplete='new-password', minlength=8, forca=True) }}
+    <small class="dica-campo">Mínimo de 8 caracteres, com letras e números.</small>
+
+    {{ campo_senha('confirmar_senha', 'confirmar_senha', 'Confirmar senha', autocomplete='new-password', minlength=8, confirma='senha') }}
+
+    {% if mostrar_funcao %}
+    <label for="funcao">Função</label>
+    <select id="funcao" name="funcao">
+      {% for chave, rotulo in funcoes.items() %}
+      <option value="{{ chave }}" {% if campos.funcao == chave %}selected{% endif %}>{{ rotulo }}</option>
+      {% endfor %}
+    </select>
+    {% endif %}
+
+    {{ campo_foto() }}
+
+    <button type="submit" class="btn btn-largo">{% if modo_admin %}Criar usuário{% else %}Cadastrar usuário{% endif %}</button>
+  </form>
+
+  {% if modo_admin %}
+  <p class="link-aux"><a href="{{ url_for('admin_dashboard') }}">Voltar ao painel</a></p>
+  {% else %}
+  <p class="link-aux">Já possui conta? <a href="{{ url_for('login') }}">Entrar</a></p>
+  {% endif %}
+</section>
+{% endblock %}

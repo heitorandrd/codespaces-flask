@@ -9,12 +9,16 @@
 
     <nav class="header-centro">
       <a href="{{ url_for('profile') }}">Perfil</a>
+      {% if usuario_admin %}
+      <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+      {% endif %}
     </nav>
 
     <nav class="header-dir">
       {% if usuario_logado %}
       <a class="nav-destaque" href="{{ url_for('logout') }}">Sair</a>
       {% else %}
+      <a href="{{ url_for('register') }}">Cadastrar</a>
       <a class="nav-destaque" href="{{ url_for('login') }}">Login</a>
       {% endif %}
     </nav>

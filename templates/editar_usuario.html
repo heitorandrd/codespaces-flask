@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import campo_senha, campo_foto %}
+
+{% block title %}Editar usuário - Portal Saúde &amp; Bem-Estar{% endblock %}
+
+{% block content %}
+<section class="card cadastro-card">
+  <h2>{% if por_admin %}Editar usuário #{{ alvo.id }}{% else %}Atualizar dados do usuário{% endif %}</h2>
+
+  {% if erro %}
+  <div class="alerta alerta-erro" role="alert">{{ erro }}</div>
+  {% endif %}
+
+  <form action="{{ url_for('admin_editar_usuario', uid=alvo.id) if por_admin else url_for('editar_usuario') }}" method="post" enctype="multipart/form-data">
+    <label for="nome">Nome completo</label>
+    <input type="text" id="nome" name="nome" value="{{ campos.nome }}" minlength="2" maxlength="80" required>
+
+    <label for="email">Usuário / E-mail</label>
+    <input type="email" id="email" name="email" value="{{ campos.email }}" maxlength="120" required>
+
+    {{ campo_senha('nova_senha', 'nova_senha', 'Nova senha (deixe em branco para manter)', autocomplete='new-password', obrigatorio=False, minlength=8, forca=True) }}
+    {{ campo_senha('confirmar_senha', 'confirmar_senha', 'Confirmar nova senha', autocomplete='new-password', obrigatorio=False, minlength=8, confirma='nova_senha') }}
+
+    {% if por_admin %}
+    <label for="funcao">Função</label>
+    <select id="funcao" name="funcao">
+      {% for chave, rotulo in funcoes.items() %}
+      <option value="{{ chave }}" {% if campos.funcao == chave %}selected{% endif %}>{{ rotulo }}</option>
+      {% endfor %}
+    </select>
+    {% endif %}
+
+    {{ campo_foto(alvo) }}
+    <label class="check-item">
+      <input type="checkbox" name="remover_foto" value="1"> Remover a foto atual (voltar ao avatar padrão)
+    </label>
+
+    <p class="dica-campo">Cadastrado em {{ alvo.data_cadastro|data_br }}. Essa data não pode ser alterada.</p>
+
+    <div class="acoes-linha">
+      <button type="submit" class="btn">Salvar alterações</button>
+      <a class="btn btn-secundario" href="{{ url_for('admin_dashboard') if por_admin else url_for('profile') }}">Cancelar</a>
+    </div>
+  </form>
+</section>
+
+{% if not por_admin %}
+<section class="card cadastro-card zona-perigo">
+  <h2>Excluir conta</h2>
+  <p class="descricao">A conta será desativada e a sessão encerrada. Você não poderá mais entrar com ela. Os dados continuam guardados e só um administrador pode reativá-la.</p>
+  <form action="{{ url_for('excluir_conta') }}" method="post" data-confirmar="Tem certeza que deseja excluir a sua conta? Você será desconectado e não poderá mais entrar.">
+    <button type="submit" class="btn btn-perigo">Excluir conta</button>
+  </form>
+</section>
+{% endif %}
+{% endblock %}

@@ -8,12 +8,18 @@
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <script src="{{ url_for('static', filename='js/auth.js') }}" defer></script>
 </head>
 <body>
   {% include 'header.html' %}
 
-  <main class="container">
+  <main class="container {% block container_extra %}{% endblock %}">
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% for categoria, mensagem in mensagens %}
+      <div class="alerta {% if categoria == 'erro' %}alerta-erro{% else %}alerta-ok{% endif %}" role="status">{{ mensagem }}</div>
+      {% endfor %}
+    {% endwith %}
+
     {% block content %}{% endblock %}
   </main>
 

@@ -1,0 +1,40 @@
+{# Peças reutilizadas em várias páginas (importadas com {% from '_macros.html' import ... %}) #}
+
+{# Campo de senha com botão de olho, medidor de força (opcional) e aviso de Caps Lock #}
+{% macro campo_senha(id, name, rotulo, autocomplete='current-password', obrigatorio=True, minlength=None, forca=False, confirma=None) %}
+<label for="{{ id }}">{{ rotulo }}</label>
+<div class="senha-wrap">
+  <input type="password" class="campo-senha" id="{{ id }}" name="{{ name }}" autocomplete="{{ autocomplete }}"
+         maxlength="128" {% if obrigatorio %}required{% endif %} {% if minlength %}minlength="{{ minlength }}"{% endif %}
+         {% if forca %}data-forca="forca-{{ id }}"{% endif %} {% if confirma %}data-confirma="{{ confirma }}"{% endif %}>
+  <button type="button" class="toggle-senha" data-alvo="{{ id }}" aria-label="Mostrar senha" aria-pressed="false">
+    <svg class="icone-olho" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+    <svg class="icone-olho-off oculto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 19c-7 0-11-7-11-7a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 5c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+  </button>
+</div>
+{% if forca %}
+<div class="forca" id="forca-{{ id }}" hidden>
+  <div class="forca-trilho"><div class="forca-barra"></div></div>
+  <span class="forca-texto"></span>
+</div>
+{% endif %}
+{% if confirma %}
+<small class="msg-campo" data-msg-de="{{ id }}"></small>
+{% endif %}
+<div class="caps-aviso" data-caps-de="{{ id }}" hidden>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+  <span><strong>Atenção:</strong> Caps Lock ativado</span>
+</div>
+{% endmacro %}
+
+{# Campo de foto com pré-visualização e validação de tipo e tamanho (feita em auth.js) #}
+{% macro campo_foto(usuario=None) %}
+<label for="foto">Foto de perfil (opcional)</label>
+<div class="foto-linha">
+  <img class="avatar-img" id="previa-foto" src="{% if usuario %}{{ foto_url(usuario) }}{% else %}{{ url_for('static', filename='images/default_avatar.png') }}{% endif %}" alt="Pré-visualização da foto">
+  <div class="foto-campo">
+    <input type="file" id="foto" name="foto" accept="image/png,image/jpeg,image/gif,image/webp" data-preview="previa-foto">
+    <small class="msg-campo" data-msg-de="foto">PNG, JPG, GIF ou WEBP, até 2 MB.</small>
+  </div>
+</div>
+{% endmacro %}

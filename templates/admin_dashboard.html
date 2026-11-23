@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel administrativo - Portal Saúde &amp; Bem-Estar{% endblock %}
+{% block container_extra %}container-largo{% endblock %}
+
+{% block content %}
+<section class="stats" aria-label="Estatísticas do sistema">
+  <div class="stat"><strong>{{ estatisticas.total }}</strong><span>Cadastros</span></div>
+  <div class="stat"><strong>{{ estatisticas.ativos }}</strong><span>Ativos</span></div>
+  <div class="stat"><strong>{{ estatisticas.excluidos }}</strong><span>Excluídos</span></div>
+  <div class="stat"><strong>{{ estatisticas.admins }}</strong><span>Admins</span></div>
+  <div class="stat"><strong>{{ estatisticas.comuns }}</strong><span>Comuns</span></div>
+  <div class="stat"><strong>{{ estatisticas.hoje }}</strong><span>Novos hoje</span></div>
+</section>
+
+<section class="card">
+  <div class="admin-topo">
+    <h2>Painel administrativo: gestão de usuários</h2>
+    <a class="btn btn-sm" href="{{ url_for('admin_novo_usuario') }}">+ Novo usuário</a>
+  </div>
+
+  <label for="busca-usuarios" class="sr-only">Buscar usuário</label>
+  <input type="search" id="busca-usuarios" class="busca" placeholder="Buscar por nome, e-mail, função ou status" autocomplete="off">
+
+  <div class="tabela-wrap">
+    <table class="tabela" id="tabela-usuarios">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Função</th>
+          <th>Status</th>
+          <th>Cadastro</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in usuarios %}
+        <tr class="{% if u.excluido %}linha-excluida{% endif %}"
+            data-busca="{{ u.id }} {{ u.nome }} {{ u.email }} {{ funcoes[u.funcao] }} {{ 'excluído' if u.excluido else 'ativo' }}">
+          <td>{{ u.id }}</td>
+          <td>
+            <div class="usuario-celula">
+              <img class="avatar-mini" src="{{ foto_url(u) }}" alt="">
+              <span>{{ u.nome }}</span>
+            </div>
+          </td>
+          <td>{{ u.email }}</td>
+          <td><span class="badge {% if u.funcao == 'admin' %}badge-admin{% else %}badge-comum{% endif %}">{{ funcoes[u.funcao] }}</span></td>
+          <td><span class="badge {% if u.excluido %}badge-obesidade{% else %}badge-normal{% endif %}">{% if u.excluido %}Excluído{% else %}Ativo{% endif %}</span></td>
+          <td>{{ u.data_cadastro|data_br }}</td>
+          <td>
+            <div class="acoes-linha">
+              <a class="btn btn-sm btn-secundario" href="{{ url_for('admin_editar_usuario', uid=u.id) }}">Editar</a>
+              {% if u.excluido %}
+              <form action="{{ url_for('admin_reativar_usuario', uid=u.id) }}" method="post" data-confirmar="Reativar a conta de {{ u.nome }}?">
+                <button type="submit" class="btn btn-sm">Reativar</button>
+              </form>
+              {% else %}
+              <form action="{{ url_for('admin_excluir_usuario', uid=u.id) }}" method="post" data-confirmar="Excluir a conta de {{ u.nome }}? Ela poderá ser reativada depois.">
+                <button type="submit" class="btn btn-sm btn-perigo">Excluir</button>
+              </form>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="dica-campo" id="busca-vazio" hidden>Nenhum usuário encontrado para essa busca.</p>
+</section>
+{% endblock %}

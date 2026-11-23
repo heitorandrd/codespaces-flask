@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from '_macros.html' import campo_senha %}
 
 {% block title %}Login - Portal Saúde &amp; Bem-Estar{% endblock %}
 
@@ -6,52 +7,20 @@
 <section class="card login-card">
   <h2>Entrar na sua conta</h2>
 
+  {% if erro %}
+  <div class="alerta alerta-erro" role="alert">{{ erro }}</div>
+  {% endif %}
+
   <form action="{{ url_for('login') }}" method="post">
-    <label for="usuario">Usuário / E-mail</label>
-    <input type="text" id="usuario" name="usuario" autocomplete="username" required>
+    <label for="email">Usuário / E-mail</label>
+    <input type="email" id="email" name="email" value="{{ email }}" placeholder="voce@email.com"
+           autocomplete="username" maxlength="120" required {% if not email %}autofocus{% endif %}>
 
-    <label for="senha">Senha</label>
-    <div class="senha-wrap">
-      <input type="password" id="senha" name="senha" autocomplete="current-password" required>
-      <button type="button" class="toggle-senha" id="toggle-senha" aria-label="Mostrar senha" aria-pressed="false">
-  <!-- olho riscado: senha oculta (estado inicial) -->
-      <svg class="icone-riscado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-  <!-- olho aberto: senha visível -->
-      <svg class="icone-aberto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-    </button>
-    </div>
+    {{ campo_senha('senha', 'senha', 'Senha') }}
 
-    <div class="caps-aviso" id="caps-aviso" hidden>Caps Lock está ativado.</div>
-
-    <button type="submit" class="btn">Entrar</button>
+    <button type="submit" class="btn btn-largo">Entrar</button>
   </form>
+
+  <p class="link-aux">Ainda não tem conta? <a href="{{ url_for('register') }}">Cadastre-se</a></p>
 </section>
-{% endblock %}
-
-{% block scripts %}
-<script>
-  (function () {
-    var campoSenha = document.getElementById('senha');
-    var botaoOlho = document.getElementById('toggle-senha');
-    var aviso = document.getElementById('caps-aviso');
-
-    botaoOlho.addEventListener('click', function () {
-    var oculto = campoSenha.type === 'password';
-    campoSenha.type = oculto ? 'text' : 'password';
-    botaoOlho.classList.toggle('mostrando', oculto);
-    botaoOlho.setAttribute('aria-pressed', oculto ? 'true' : 'false');
-    botaoOlho.setAttribute('aria-label', oculto ? 'Ocultar senha' : 'Mostrar senha');
-    });
-
-    function verificarCaps(evento) {
-      if (evento && typeof evento.getModifierState === 'function') {
-        aviso.hidden = !evento.getModifierState('CapsLock');
-      }
-    }
-
-    ['keydown', 'keyup', 'mousedown', 'mouseup', 'click', 'mousemove'].forEach(function (tipo) {
-      document.addEventListener(tipo, verificarCaps);
-    });
-  })();
-</script>
 {% endblock %}
